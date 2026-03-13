@@ -1,30 +1,36 @@
 import qr from "qrcode";
-import path from "path";
-import fs from "fs"
+import { AppError } from "../../errors/AppError";
+import { verifyJwtToken } from "../../utils/jwt";
+import { JwtPayload } from "jsonwebtoken";
+import { AuthUser } from "../../types/user.type";
+import { removeClient } from "../../whats-app/client";
 class UtilsService {
- async generateQr(code: string) {
-  const dir = path.join(process.cwd(), "qr-images");
-  // if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+  async generateQr(token: string) {
+    let code;
 
-  // const filePath = path.join(dir, `qr-${Date.now()}.svg`);
+    try {
+      const decode = verifyJwtToken(
+        token,
+        process.env.JWT_QR_CODE_SECRET as string,
+      ) as { code: string } & JwtPayload;
+      code = decode.code;
+    } catch (error) {
+      throw new AppError(400, "Invalid token");
+    }
 
-  // await qr.toFile(filePath, code, {
-  //   width: 300,
-  //   type: "svg",
-  //   margin: 5,
-  // });
+    const qrBuffer = await qr.toBuffer(code, {
+      type: "png",
+      width: 300,
+      margin: 5,
+    });
 
-  // return filePath; 
+    return qrBuffer;
+  }
 
-  const qrBuffer = await qr.toBuffer(code as string, {
-  type:"png",
-  width: 300,
-  margin: 5,
-   });
-
- return qrBuffer
-}
-
+  async logout(authUser: AuthUser) {
+    await removeClient(authUser.id);
+    return null;
+  }
 }
 
 export default new UtilsService();

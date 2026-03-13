@@ -4,11 +4,17 @@ import { StringValue } from "ms";
 export function createJwtToken(
   payload: any,
   secret: string,
-  expire: StringValue,
+  expire?: StringValue,
 ) {
-  return jwt.sign(payload, secret, {
-    expiresIn: expire,
-  });
+  return jwt.sign(
+    payload,
+    secret,
+    expire
+      ? {
+          expiresIn: expire,
+        }
+      : {},
+  );
 }
 
 export function verifyJwtToken(token: string, secret: string) {

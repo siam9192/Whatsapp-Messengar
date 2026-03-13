@@ -5,14 +5,22 @@ import { AuthUser } from "../types/user.type";
 import { JwtPayload } from "jsonwebtoken";
 
 export async function socketAuth(socket: Socket, next: (err?: Error) => void) {
+ 
   try {
-    const cookies = socket.handshake.headers.cookie;
-    if (!cookies) {
-      return next(new Error("No cookies found"));
-    }
+    // const cookies = socket.handshake.headers.cookie;
+    // if (!cookies) {
+    //   return next();
+    // }
 
-    const parsed = cookie.parse(cookies);
-    const accessToken = parsed.accessToken;
+    // console.log("Not found",cookies)
+    
+
+    // const parsed = cookie.parse(cookies);
+    // const accessToken = parsed.accessToken;
+
+     const accessToken = socket.handshake.headers.authorization;
+      console.log(accessToken)
+     if (!accessToken) throw new Error()
 
     const decode = verifyJwtToken(
       accessToken as string,

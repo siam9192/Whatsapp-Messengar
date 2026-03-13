@@ -1,45 +1,44 @@
 import { Client } from "whatsapp-web.js";
 import { getIo } from "../socket/init";
 import { createJwtToken } from "../utils/jwt";
+import qrCode from "qrcode";
 
-export function registerClientEvents(client: Client,userId:string,socketId: string) {
-  client.on("qr", (qr) => {
+export function registerClientEvents(
+  client: Client,
+  userId: string,
+  socketId: string,
+) {
+  client.on("qr", async (qr) => {
     const io = getIo();
-    if (io) {
-      io.to(socketId).emit("qr", qr);
-    }
+    const url = await qrCode.toDataURL(qr);
+    io.to(socketId).emit("qr", url);
   });
 
   client.on("ready", async () => {
+    console.log("client-ready");
     const info = client.info;
-    const photo = await client.getProfilePicUrl(info.wid.user);
+    // const photo = await client.getProfilePicUrl(info.wid.user);
     const user = {
-      id:userId,
+      id: userId,
       phone: info.wid.user,
       name: info.pushname,
-      photo: photo ?? null,
+      photo: null,
     };
     const io = getIo();
     const accessToken = createJwtToken(
       user,
       process.env.JWT_ACCESS_TOKEN_SECRET as string,
-      "10m",
     );
-
-    io.to(socketId).emit("set-cookie", {
-      name: "access-token",
-      value: accessToken,
-      options: {
-        httpOnly: true,
-        secure: process.env.ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 1000 * 60 * 10,
-      },
-    });
+    io.to(socketId).emit("ready", accessToken);
   });
 
-  client.on("disconnected", () => {
-    client.initialize();
+ 
+
+  client.on("auth_failure", async () => {
+    console.log("client-logout")
+    const io = getIo();
+    await client.logout();
+    await client.destroy();
+    io.to(socketId).emit("logout","logout successfully");
   });
 }

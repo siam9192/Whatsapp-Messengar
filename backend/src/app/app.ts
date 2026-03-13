@@ -6,7 +6,7 @@ import { Server } from "socket.io";
 import { initIO } from "./socket/init";
 import { utilsRouter } from "./modules/utils/utils.route";
 import notFoundHandler from "./middlewares/notFoundHandler";
-
+import  cookieParser from "cookie-parser"
 dotenv.config();
 const app = express();
 
@@ -19,6 +19,8 @@ app.use(
     exposedHeaders: ["Set-Cookie"],
   }),
 );
+
+app.use(cookieParser())
 
 app.use(express.json())
 
