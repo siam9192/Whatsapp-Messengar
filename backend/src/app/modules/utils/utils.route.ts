@@ -3,6 +3,6 @@ import utilsController from "./utils.controller";
 
 const router = Router();
 
-router.get("/qr", utilsController.generateQr);
+router.get("/qr/:code", utilsController.generateQr);
 
 export const utilsRouter = router;

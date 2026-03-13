@@ -20,6 +20,7 @@ export function initIO(io: Server) {
       const userId = user?.id ?? generateUserId();
       const client = getClient(userId);
       registerClientEvents(client, userId, socket.id);
+      console.log("connected","user-id:",userId,"socket-id:",socket.id)
     }));
 
   setIo(io);
