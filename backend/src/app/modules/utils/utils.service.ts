@@ -36,12 +36,11 @@ class UtilsService {
   }
 
   async sendMessage(authUser: AuthUser, payload: SendMessagePayload) {
-
     const client = await getClient(authUser.id);
     const { users, message } = payload;
     for (const user of users) {
       for (let i = 0; i < user.count; i++) {
-        await client.sendMessage(user.number + "@c.us", message);
+        await client?.client.sendMessage(user.number + "@c.us", message);
       }
     }
   }

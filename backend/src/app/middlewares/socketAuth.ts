@@ -1,6 +1,5 @@
 import { Socket } from "socket.io";
 import { verifyJwtToken } from "../utils/jwt";
-import cookie from "cookie";
 import { AuthUser } from "../types/user.type";
 import { JwtPayload } from "jsonwebtoken";
 
