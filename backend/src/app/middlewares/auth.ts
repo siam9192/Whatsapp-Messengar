@@ -4,6 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "../errors/AppError";
 import status from "http-status";
+import { getClient } from "../whats-app/client";
 
 export async function auth(req: Request, res: Response, next: NextFunction) {
   try {
@@ -17,13 +18,15 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
     ) as AuthUser & JwtPayload;
 
     if (!decode) throw new Error();
-
+console.log(decode)
     const user = {
       id: decode.id,
       phone: decode.phone,
       name: decode.name,
       photo: decode.phone,
     };
+    const client = getClient(user.id);
+    if (!client) throw new Error();
 
     (req as Request & { user: AuthUser }).user = user;
     next();

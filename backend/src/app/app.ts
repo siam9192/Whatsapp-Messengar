@@ -4,9 +4,9 @@ import dotenv from "dotenv";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { initIO } from "./socket/init";
-import { utilsRouter } from "./modules/utils/utils.route";
+import { router } from "./module/route";
 import notFoundHandler from "./middlewares/notFoundHandler";
-import  cookieParser from "cookie-parser"
+import cookieParser from "cookie-parser";
 dotenv.config();
 const app = express();
 
@@ -20,17 +20,17 @@ app.use(
   }),
 );
 
-app.use(cookieParser())
+app.use(cookieParser());
 
-app.use(express.json())
+app.use(express.json());
 
-app.use("/api",utilsRouter)
+app.use("/api", router);
 
-app.use(notFoundHandler)
+app.use(notFoundHandler);
 
-app.use((err:any,req:Request,res:Response,next:NextFunction)=>{
-  console.log(err.message)
-})
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.log(err.message);
+});
 
 export const server = createServer(app);
 

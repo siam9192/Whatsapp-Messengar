@@ -22,12 +22,12 @@ export function initClients() {
 
     if (!fs.statSync(fullPath).isDirectory()) continue;
 
-    const id = folder.split("-")[2];
+    const id = folder.replace("session-", "");
 
     const client = new Client({
       authStrategy: new LocalAuth({ clientId: id }),
     });
-
+    client.initialize();
     clients.set(id, {
       client,
       socketIds: [],
@@ -36,24 +36,26 @@ export function initClients() {
 }
 
 export async function logout(userId: string) {
-  const io = getIo();
-
-  const client = getClient(userId);
-  if (!client) return;
-
   try {
-    await client.client.logout();
-    await client.client.destroy();
-  } catch (err) {
-    console.log("Client destroy error:", err);
-  }
+    const io = getIo();
 
-  clients.delete(userId);
+    const client = getClient(userId);
+    if (!client) return;
 
-  io.to(client.socketIds).emit("logout", { message: "Logout successfully" });
-  io.to(client.socketIds).disconnectSockets(true);
+    try {
+      await client.client.logout();
+      await client.client.destroy();
+    } catch (err) {
+      console.log("Client destroy error:", err);
+    }
 
-  console.log("Logout successful:", userId);
+    clients.delete(userId);
+
+    io.to(client.socketIds).emit("logout", { message: "Logout successfully" });
+    io.to(client.socketIds).disconnectSockets(true);
+
+    console.log("Logout successful:", userId);
+  } catch (error) {}
 }
 
 export function watchClient(
@@ -70,9 +72,8 @@ export function watchClient(
       }
     } catch (error: any) {
       console.log("Client session error:", error?.message);
-
-      clearInterval(interval);
       await logout(userId);
+      clearInterval(interval);
     }
   }, 2000);
 }
@@ -88,15 +89,24 @@ export async function createClient(userId: string) {
     }),
   });
 
-  await client.initialize();
-  
-  
+  client.initialize();
+
   clients.set(userId, {
     socketIds: [],
     client,
   });
 
   return client;
+}
+
+export function addClientSocketId(userId: string, socketId: string) {
+  const client = clients.get(userId);
+  if (!client) return;
+
+  clients.set(userId, {
+    client: client.client,
+    socketIds: [...client.socketIds, socketId],
+  });
 }
 
 export async function removeClient(userId: string) {
@@ -114,4 +124,8 @@ export async function removeClient(userId: string) {
 
 export function getClient(userId: string) {
   return clients.get(userId) ?? null;
+}
+
+export function addClient(userId: string, socketId: string, client: Client) {
+  clients.set(userId, { client, socketIds: [socketId] });
 }
