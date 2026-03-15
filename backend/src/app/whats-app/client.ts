@@ -1,53 +1,117 @@
 import { Client, LocalAuth } from "whatsapp-web.js";
 import fs from "fs";
 import path from "path";
+import { getIo } from "../socket/init";
 
-const clients = new Map<String, Client>();
+const clients = new Map<
+  string,
+  {
+    socketIds: string[];
+    client: Client;
+  }
+>();
 
 export function initClients() {
   const authPath = path.join(process.cwd(), ".wwebjs_auth");
+  if (!fs.existsSync(authPath)) return;
 
-  const clientsName = fs.readdirSync(authPath).filter((folder) => {
+  const folders = fs.readdirSync(authPath);
+
+  for (const folder of folders) {
     const fullPath = path.join(authPath, folder);
-    return fs.statSync(fullPath).isDirectory();
-  });
 
-  clientsName.forEach((clientName) => {
-    const id = clientName.split("-")[2];
+    if (!fs.statSync(fullPath).isDirectory()) continue;
+
+    const id = folder.split("-")[2];
+
     const client = new Client({
       authStrategy: new LocalAuth({ clientId: id }),
     });
-    if (client) clients.set(id, client);
-  });
+
+    clients.set(id, {
+      client,
+      socketIds: [],
+    });
+  }
 }
 
-function createClient(userId: string) {
+export async function logout(userId: string) {
+  const io = getIo();
+
+  const client = getClient(userId);
+  if (!client) return;
+
+  try {
+    await client.client.logout();
+    await client.client.destroy();
+  } catch (err) {
+    console.log("Client destroy error:", err);
+  }
+
+  clients.delete(userId);
+
+  io.to(client.socketIds).emit("logout", { message: "Logout successfully" });
+  io.to(client.socketIds).disconnectSockets(true);
+
+  console.log("Logout successful:", userId);
+}
+
+export function watchClient(
+  client: Client,
+  userId: string,
+  userExist: boolean,
+) {
+  const interval = setInterval(async () => {
+    try {
+      const state = await client.getState();
+
+      if (userExist && state === null) {
+        throw new Error("Session lost");
+      }
+    } catch (error: any) {
+      console.log("Client session error:", error?.message);
+
+      clearInterval(interval);
+      await logout(userId);
+    }
+  }, 2000);
+}
+
+export async function createClient(userId: string) {
+  if (clients.has(userId)) {
+    return clients.get(userId)!;
+  }
+
   const client = new Client({
     authStrategy: new LocalAuth({
       clientId: userId,
     }),
   });
-  client.initialize();
+
+  await client.initialize();
+  
+  
+  clients.set(userId, {
+    socketIds: [],
+    client,
+  });
+
   return client;
 }
 
 export async function removeClient(userId: string) {
   const client = clients.get(userId);
 
-  if (client) {
-    await client.logout();
-    await client.destroy();
-    clients.delete(userId);
-    return true;
+  if (!client) return false;
+
+  try {
+    await logout(userId);
+  } catch (error) {
+    console.log("Remove client error:", error);
   }
-  return false;
+  return true;
 }
 
 export function getClient(userId: string) {
-  if (!clients.has(userId)) {
-    const client = createClient(userId);
-    clients.set(userId, client);
-    return client;
-  }
-  return clients.get(userId) as Client;
+  return clients.get(userId) ?? null;
 }

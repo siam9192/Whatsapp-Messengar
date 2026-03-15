@@ -4,6 +4,9 @@ import { verifyJwtToken } from "../../utils/jwt";
 import { JwtPayload } from "jsonwebtoken";
 import { AuthUser } from "../../types/user.type";
 import { removeClient } from "../../whats-app/client";
+import { getClient } from "../../whats-app/client";
+import { SendMessagePayload } from "./utils.interface";
+
 class UtilsService {
   async generateQr(token: string) {
     let code;
@@ -30,6 +33,17 @@ class UtilsService {
   async logout(authUser: AuthUser) {
     await removeClient(authUser.id);
     return null;
+  }
+
+  async sendMessage(authUser: AuthUser, payload: SendMessagePayload) {
+
+    const client = await getClient(authUser.id);
+    const { users, message } = payload;
+    for (const user of users) {
+      for (let i = 0; i < user.count; i++) {
+        await client.sendMessage(user.number + "@c.us", message);
+      }
+    }
   }
 }
 

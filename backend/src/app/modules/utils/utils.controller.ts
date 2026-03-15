@@ -9,6 +9,15 @@ class UtilsController {
     res.send(qrBuffer);
   });
 
+  sendMessage = catchAsync(async (req:any, res) => {
+    const result = await utilsService.sendMessage(req.user!,req.body);
+       res.status(status.OK).json({
+      message:"Message successfully changed"
+    })
+  });
+
+
+
   logout = catchAsync(async (req:any, res) => {
     await utilsService.logout(req.user!);
     res.clearCookie("accessToken");

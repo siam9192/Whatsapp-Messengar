@@ -15,7 +15,6 @@ export function registerClientEvents(
   });
 
   client.on("ready", async () => {
-    console.log("client-ready");
     const info = client.info;
     // const photo = await client.getProfilePicUrl(info.wid.user);
     const user = {
@@ -32,13 +31,13 @@ export function registerClientEvents(
     io.to(socketId).emit("ready", accessToken);
   });
 
- 
+  client.on("change_state", async (state) => {
+    console.log("This is the state: ", state);
+    if (state === "UNPAIRED" || state === "UNPAIRED_IDLE") {
+    }
+  });
 
   client.on("auth_failure", async () => {
-    console.log("client-logout")
-    const io = getIo();
-    await client.logout();
-    await client.destroy();
-    io.to(socketId).emit("logout","logout successfully");
+    await client.initialize();
   });
 }
