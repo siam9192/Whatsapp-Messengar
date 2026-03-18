@@ -1,6 +1,7 @@
 "use client";
 import HistoryDialog from "@/components/custom_ui/history-dialog";
 import Pagination from "@/components/custom_ui/pagination";
+import ResultDialog from "@/components/custom_ui/result-dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -436,6 +437,13 @@ function page() {
   const [active, setActive] = useState(0);
   return (
     <div className="py-10">
+      {/* <ResultDialog
+        result={{
+          successful: 8,
+          failed: ["+8801700000001", "+8801700000002", "+8801700000003"],
+        }}
+        open={true}
+      /> */}
       <div className="space-y-2">
         <h1 className="text-2xl font-bold">Messaging Dashboard</h1>
 
