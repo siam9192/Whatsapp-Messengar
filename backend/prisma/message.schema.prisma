@@ -1,0 +1,28 @@
+model Message {
+  id          String       @id @default(cuid())
+  user_id     String
+  message_text String
+  recipients  Recipient[]  // one-to-many relation
+  schedule_at DateTime
+  status MessageStatus
+  
+  created_at DateTime
+  updated_at DateTime
+}
+
+model Recipient {
+  id         String   @id @default(cuid())
+  message_id String
+  number     String
+  count      Int
+
+  message    Message  @relation(fields: [message_id], references: [id])
+}
+
+
+enum MessageStatus {
+    Scheduled
+    Sent
+    Failed
+    Canceled
+}

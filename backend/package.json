@@ -1,10 +1,14 @@
 {
   "dependencies": {
     "@paralleldrive/cuid2": "^3.3.0",
+    "@prisma/adapter-better-sqlite3": "^7.5.0",
+    "@prisma/client": "^7.5.0",
     "cookie": "^1.1.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.3",
     "qrcode": "^1.5.4",
     "socket.io": "^4.8.3",
@@ -15,8 +19,12 @@
     "st": "tsnd --respawn src/app/server.ts"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/qrcode": "^1.5.6"
+    "@types/node": "^25.5.0",
+    "@types/qrcode": "^1.5.6",
+    "prisma": "^7.5.0"
   }
 }
