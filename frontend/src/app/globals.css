@@ -83,9 +83,9 @@
 
 .dark {
   /* Background & Surfaces */
-  --background: oklch(10% 0 263); /* dark canvas */
+  --background: rgb(24,25,33); /* dark canvas */
   --foreground: oklch(97% 0 262); /* main text in white */
-  --card: #1A1B234D; /* glassy card background */
+  --card: ##FFFFFF1A; /* glassy card background */
   --card-foreground: oklch(97% 0 262); /* text on card */
   --popover: oklch(15% 0 263); /* popover bg */
   --popover-foreground: oklch(97% 0 262);
@@ -104,7 +104,7 @@
 
   /* Borders / Inputs / Rings */
   --border: oklch(25% 0 264); /* subtle border for dark */
-  --input: oklch(25% 0 264);
+  --input: rgb(36,38,45);
   --ring: oklch(50% 0.22 140); /* accent green for focus */
 
   /* Radius / Typography */
@@ -125,9 +125,9 @@
 /* Rectangle */
 .rectangle {
   position: absolute;
-  width: 600px;
-  height: 600px;
-  background: #10b9811a;
+  width: 500px;
+  height: 500px;
+  background: #10b98107;
   border-radius: 9999px;
   filter: blur(150px);
 }
@@ -139,4 +139,9 @@
     0px 0px 0px #171a1f00;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
+}/* Container */
+
+
+.button-shadow {
+  box-shadow: 0px 10px 20px #25D36633, 0px 0px 0px #171a1f00;
 }

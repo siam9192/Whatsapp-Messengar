@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
-import {  Inter, Poppins, Geist } from "next/font/google";
+import { Inter, Poppins, Geist } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/shared/header";
 import { cn } from "@/lib/utils";
+import Footer from "@/components/shared/footer";
+import Container from "@/components/layout/container";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const poppins = Poppins(
- {
-  variable:"--font-poppins",
-  weight:["400","500","600","700","800","900"],
- }  
-);
+const poppins = Poppins({
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,13 +31,16 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("dark", "font-sans", geist.variable)}>
       <body
-        className={`${inter.variable} ${poppins.variable} antialiased h-screen overflow-hidden `}
+        className={`${inter.variable} ${poppins.variable} antialiased h-screen overflow-x-hidden overflow-y-auto`}
       >
-        <Header/>
+        <Header />
 
-        {children}
-        <div className="rectangle absolute top-140 -left-18"></div>
-          <div className="rectangle absolute -top-28 -right-20"></div>
+        <Container>{children}</Container>
+        {/* <Footer /> */}
+
+        {/* Radials */}
+        <div className="rectangle  top-140 -left-18"></div>
+        <div className="rectangle  -top-40 -right-96"></div>
       </body>
     </html>
   );
