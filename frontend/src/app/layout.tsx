@@ -5,6 +5,7 @@ import Header from "@/components/shared/header";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/shared/footer";
 import Container from "@/components/layout/container";
+import { ReactNode } from "react";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -31,17 +32,23 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("dark", "font-sans", geist.variable)}>
       <body
-        className={`${inter.variable} ${poppins.variable} antialiased h-screen overflow-x-hidden overflow-y-auto`}
+        className={`${inter.variable} ${poppins.variable} antialiased h-screen  overflow-hidden`}
       >
-        <Header />
-
-        <Container>{children}</Container>
-        {/* <Footer /> */}
-
+        <Main>{children}</Main>
         {/* Radials */}
-        <div className="rectangle  top-140 -left-18"></div>
-        <div className="rectangle  -top-40 -right-96"></div>
+        <div className="rectangle top-80 lg:top-140 -left-18 hidden lg:block"></div>
+        <div className="rectangle  -top-10  lg:-top-40 -right-96 hidden lg:block"></div>
       </body>
     </html>
+  );
+}
+
+export function Main({ children }: { children: ReactNode }) {
+  return (
+    <div className="h-full overflow-y-auto">
+      <Header />
+
+      <Container>{children}</Container>
+    </div>
   );
 }

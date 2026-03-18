@@ -1,6 +1,4 @@
-import Container from "@/components/layout/container";
 import { AlertTriangle } from "lucide-react";
-import Image from "next/image";
 
 export default function Home() {
   const scanInstructions = [
@@ -23,11 +21,20 @@ export default function Home() {
           src="https://ar-code.com/images/AI-Code-try-on-shoes.webp"
           alt=""
         />
-        <div className="mt-5 px-4 py-2  bg-accent/10 size-fit rounded-full mx-auto border border-accent text-primary font-semibold font-primary flex items-center gap-2">
-          <div className="bg-primary/10 size-fit p-1 rounded-full">
-            <div className="p-1 bg-primary rounded-full"></div>
+        <div className="mt-5 px-4 py-2 bg-accent/10 w-fit rounded-full mx-auto border border-accent text-primary font-semibold flex items-center gap-2">
+          {/* Animated Indicator */}
+          <div className="relative flex items-center justify-center">
+            {/* Ripple */}
+            <span className="absolute inline-flex h-5 w-5 rounded-full bg-primary/20 animate-ping"></span>
+
+            {/* Inner Dot */}
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary"></span>
           </div>
-          <p className="text-xs font-secondary">Waiting for Scan...</p>
+
+          {/* Text */}
+          <p className="text-xs text-muted-foreground animate-pulse">
+            Waiting for Scan...
+          </p>
         </div>
 
         <hr className="mt-10" />

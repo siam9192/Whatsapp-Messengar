@@ -129,7 +129,7 @@
   height: 500px;
   background: #10b98107;
   border-radius: 9999px;
-  filter: blur(150px);
+  filter: blur(200px);
 }
 
 /* Container */
@@ -141,7 +141,22 @@
   -webkit-backdrop-filter: blur(24px);
 }/* Container */
 
+.dialog-shadow {
+   box-shadow:
+    0px 0px 64px #00000080,
+    0px 0px 0px #171a1f00;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
 
 .button-shadow {
   box-shadow: 0px 10px 20px #25D36633, 0px 0px 0px #171a1f00;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+button:disabled:hover {
+  cursor:none;
 }
