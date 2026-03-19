@@ -2,7 +2,7 @@ import Container from "../layout/container";
 
 function Footer() {
   return (
-    <div className=" absolute bottom-0 left-0 w-full py-5 border-t z-10 bg-card">
+    <div className="  absolute bottom-0 left-0 w-full py-5 border-t z-10 bg-card">
       <Container>
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
