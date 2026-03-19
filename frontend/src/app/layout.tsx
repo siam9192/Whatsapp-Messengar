@@ -5,8 +5,8 @@ import Header from "@/components/shared/header";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/shared/footer";
 import Container from "@/components/layout/container";
-import { ReactNode } from "react";
 import IoProvider from "@/provider/io.provider";
+import UserProvider from "@/provider/user.provider";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -35,12 +35,14 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${poppins.variable} antialiased h-screen  overflow-x-hidden overflow-y-auto`}
       >
-        <IoProvider>
-          <Header />
-          <Container>{children}</Container>
-          <Footer />
-        </IoProvider>
-        {/* Radials */}
+        <UserProvider>
+          <IoProvider>
+            <Header />
+            <Container>{children}</Container>
+            <Footer />
+          </IoProvider>
+        </UserProvider>
+
         {/* <div className="rectangle top-80 lg:top-140 -left-18 hidden lg:block"></div> */}
         <div className="rectangle  -top-10  lg:-top-40 -right-96 hidden lg:block"></div>
       </body>

@@ -1,7 +1,6 @@
 "use client";
 import HistoryDialog from "@/components/custom_ui/history-dialog";
 import Pagination from "@/components/custom_ui/pagination";
-import ResultDialog from "@/components/custom_ui/result-dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -433,7 +432,7 @@ export function SendHistory() {
   );
 }
 
-function page() {
+function MainPage() {
   const [active, setActive] = useState(0);
   return (
     <div className="py-10">
@@ -507,4 +506,4 @@ function page() {
   );
 }
 
-export default page;
+export default MainPage;
